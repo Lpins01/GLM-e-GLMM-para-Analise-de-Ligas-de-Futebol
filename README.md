@@ -1,4 +1,4 @@
-# Análise Hierárquica do Futebol: Comparando Ligas com GLM e GLMM
+# Comparando Ligas com GLM e GLMM
 
 Este projeto explora as dinâmicas do futebol nas principais ligas do mundo através de uma perspectiva estatística. A questão central investigada é: os fatores que influenciam o resultado de uma partida, como a vantagem de jogar em casa (mando de campo), são universais ou variam significativamente de uma liga para outra?
 
