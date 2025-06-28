@@ -21,10 +21,39 @@ Uma das principais limitações do plano gratuito é o acesso restrito a dados d
 
 ## Processo de Coleta
 
-A coleta de dados foi automatizada através de um script em Python, seguindo os seguintes passos:
+A coleta de dados foi automatizada através de um script em Python `requisicao_dados.ipynb`, seguindo os seguintes passos:
 
 1.  **Autenticação Segura:** A chave de acesso da API foi guardada em um arquivo .env para garantir que as credenciais não fossem expostas no código-fonte.
 
 2.  **Requisição à API:** Foi feita uma chamada ao endpoint /fixtures da API-Football para obter os dados de todas as partidas da temporada de 2023 de cada campeonato.
 
 3.  **Estruturação e Consolidação:** A resposta da API (em formato JSON) foi processada, e os dados de cada partida foram extraídos e organizados em um único DataFrame do pandas.
+
+## Tratamento dos Dados
+
+Após a obtenção dos dados, foi realizada uma etapa de pré-processamento e limpeza para adequar o dataset às análises e à modelagem. O objetivo foi remover informações desnecessárias, simplificar a estrutura e criar variáveis relevantes para os modelos GLM e GLMM.
+
+O processo foi dividido nas seguintes etapas:
+
+1. **Remoção de Colunas Irrelevantes e Redundantes:**
+
+Diversas colunas foram removidas para otimizar o DataFrame. Elas foram agrupadas de acordo com o motivo da exclusão:
+
+- **Dados Redundantes:** Informações que podiam ser encontradas ou calculadas a partir de outras colunas.
+    - `fixture.timestamp` (redundante com `fixture.date`)
+    - `fixture.status.long` (redundante com `fixture.status.short`)
+    - `teams.home.winner` e `teams.away.winner` (calculável a partir dos gols)
+    - `score.fulltime.home` e `score.fulltime.away` (redundante com `goals.home` e `goals.away`)
+
+- **Dados de Exibição (Não Analíticos):** Colunas que continham URLs de imagens ou logos, sem valor para a análise estatística.
+    - `league.logo`
+    - `league.flag`
+    - `teams.home.logo`
+    - `teams.away.logo`
+
+- **Informações Irrelevantes para a Modelagem:** Detalhes que não contribuem para prever o resultado das partidas.
+    - `fixture.referee`
+    - `fixture.timezone`
+    - `fixture.periods.first` e `fixture.periods.second`
+    - `fixture.status.elapsed`
+    - `league.standings`
