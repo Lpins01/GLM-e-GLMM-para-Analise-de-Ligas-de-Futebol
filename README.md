@@ -29,13 +29,13 @@ A coleta de dados foi automatizada através de um script em Python `requisicao_d
 
 3.  **Estruturação e Consolidação:** A resposta da API (em formato JSON) foi processada, e os dados de cada partida foram extraídos e organizados em um único DataFrame do pandas.
 
-## Tratamento dos Dados
+# Tratamento dos Dados
 
 Após a obtenção dos dados, foi realizada uma etapa de pré-processamento e limpeza para adequar o dataset às análises e à modelagem. O objetivo foi remover informações desnecessárias, simplificar a estrutura e criar variáveis relevantes para os modelos GLM e GLMM.
 
 O processo foi dividido nas seguintes etapas:
 
-1. **Remoção de Colunas Irrelevantes e Redundantes:**
+1. **Remoção de Colunas:**
 
 Diversas colunas foram removidas para otimizar o DataFrame. Elas foram agrupadas de acordo com o motivo da exclusão:
 
@@ -43,17 +43,35 @@ Diversas colunas foram removidas para otimizar o DataFrame. Elas foram agrupadas
     - `fixture.timestamp` (redundante com `fixture.date`)
     - `fixture.status.long` (redundante com `fixture.status.short`)
     - `teams.home.winner` e `teams.away.winner` (calculável a partir dos gols)
-    - `score.fulltime.home` e `score.fulltime.away` (redundante com `goals.home` e `goals.away`)
+    - `league.season` e `league.round` (informações contextuais já conhecidas e fixas para a análise)
 
-- **Dados de Exibição (Não Analíticos):** Colunas que continham URLs de imagens ou logos, sem valor para a análise estatística.
+- **Dados de Exibição (Não Analíticos):** Identificadores únicos que não serão usados como features e URLs de imagens sem valor analítico.
+    - `fixture.id`
     - `league.logo`
     - `league.flag`
     - `teams.home.logo`
     - `teams.away.logo`
 
-- **Informações Irrelevantes para a Modelagem:** Detalhes que não contribuem para prever o resultado das partidas.
+- **Placares Detalhados e Irrelevantes:** Múltiplas colunas de placar que não representam o resultado final consolidado (`goals.home` e `goals.away`), que é o foco da análise.
+    - `score.halftime.home` e `score.halftime.away`
+    - `score.fulltime.home` e `score.fulltime.away`
+    - `score.extratime.home` e `score.extratime.away`
+    - `score.penalty.home` e `score.penalty.away`
+
+- **Metadados da Partida:** Detalhes da partida que não são relevantes para a modelagem do placar.
     - `fixture.referee`
     - `fixture.timezone`
     - `fixture.periods.first` e `fixture.periods.second`
     - `fixture.status.elapsed`
     - `league.standings`
+
+2. **Data da Partida:**
+
+A coluna `df["fixture.date"]` foi tratada para que seja do tipo data e foi desconsiderado o horário da partida, visto que isso não será algo relevante para a modelagem.
+
+3. **Criação de coluna:**
+
+Apesar de antes existir a coluna `teams.home.winner`, decidi criar a coluna df["winner"] de acordo com o resultado, podendo assumir três valores:
+- `Vitória_Casa`
+- `Vitória_Visitante`
+- `Empate`
