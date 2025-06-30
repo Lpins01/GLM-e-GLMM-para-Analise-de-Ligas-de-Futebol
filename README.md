@@ -69,9 +69,11 @@ Diversas colunas foram removidas para otimizar o DataFrame. Elas foram agrupadas
 
 A coluna `df["fixture.date"]` foi tratada para que seja do tipo data e foi desconsiderado o horário da partida, visto que isso não será algo relevante para a modelagem.
 
-3. **Criação de coluna:**
+3. **Criação de colunas:**
 
 Apesar de antes existir a coluna `teams.home.winner`, decidi criar a coluna df["winner"] de acordo com o resultado, podendo assumir três valores:
 - `Vitória_Casa`
 - `Vitória_Visitante`
 - `Empate`
+
+Também foi criada uma coluna `df["winner.team"]` contendo o nome do time vencedor.
